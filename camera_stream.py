@@ -1,28 +1,20 @@
-import cv2
+from picamera2 import Picamera2, Preview
+import time
 
-# Open a connection to the camera
-cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
+# Initialize the camera
+picam2 = Picamera2()
+config = picam2.create_preview_configuration(main={"size": (1920, 1080)})  # Set resolution as needed
+picam2.configure(config)
 
+# Start the camera
+picam2.start_preview(Preview.QTGL)
+picam2.start()
 
-# Set resolution (match it to the sensor’s capability)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-cap.set(cv2.CAP_PROP_FPS, 30)  # Set frame rate
-
-# Stream the video
-while cap.isOpened():
-    ret, frame = cap.read()
-    if not ret:
-        print("Failed to capture video")
-        break
-
-    # Display the frame on the screen
-    cv2.imshow("Camera Stream", frame)
-
-    # Press 'q' to quit the stream
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-# Release resources
-cap.release()
-cv2.destroyAllWindows()
+print("Streaming... Press Ctrl+C to stop.")
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    print("Stopping the stream.")
+finally:
+    picam2.stop()
