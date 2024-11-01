@@ -1,7 +1,8 @@
 import cv2
 
 # Open a connection to the camera
-cap = cv2.VideoCapture(0)  # Use 0 or the correct video index for your camera
+cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
+
 
 # Set resolution (match it to the sensor’s capability)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
